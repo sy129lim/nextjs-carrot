@@ -4,6 +4,8 @@ import { ThemeProvider } from '@/components/theme-provider';
 
 import './globals.css';
 
+import { gmarket, pretendard } from '@/fonts';
+
 import { ThemeToggle } from '@/components/theme-toggle';
 
 export const metadata: Metadata = {
@@ -17,8 +19,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko" suppressHydrationWarning>
-      <body>
+    <html lang="ko" className={`${gmarket.variable}`} suppressHydrationWarning>
+      <body className={`${pretendard.className} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -26,7 +28,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           {children}
-          <div className="fixed bottom-4 right-4">
+          <div className="fixed right-4 bottom-4">
             <ThemeToggle />
           </div>
         </ThemeProvider>

@@ -4,6 +4,8 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --font-gmarket: var(--font-gmarket);
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -116,5 +118,8 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+  .pd-text-gradient {
+    @apply bg-linear-[90deg,#FF3957,#8242F1] bg-clip-text text-transparent;
   }
 }

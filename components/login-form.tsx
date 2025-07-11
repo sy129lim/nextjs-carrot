@@ -19,8 +19,8 @@ export function LoginForm({
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
         <CardHeader className="flex w-full items-center justify-center">
-          <CardTitle className="text-center text-2xl">
-            플랜닥스 로그인
+          <CardTitle className="font-gmarket text-center text-2xl">
+            <span className="pd-text-gradient">플랜닥스 로그인</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
