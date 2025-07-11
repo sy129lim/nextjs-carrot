@@ -8,6 +8,7 @@ module.exports = {
   jsxSingleQuote: false,
   arrowParens: 'always',
   endOfLine: 'lf',
+
   importOrder: [
     '^(react/(.*)$)|^(react$)',
     '^(next/(.*)$)|^(next$)',
@@ -16,6 +17,8 @@ module.exports = {
     '<THIRD_PARTY_MODULES>',
     '',
     '^(@/types/(.*)$)|^(@/types$)',
+    '',
+    '^(@/fonts/(.*)$)|^(@/fonts$)',
     '^(@/config/(.*)$)|^(@/config$)',
     '^(@/auth/(.*)$)|^(@/auth$)',
     '^(@/lib/(.*)$)|^(@/lib$)',
