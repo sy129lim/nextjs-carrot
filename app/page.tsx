@@ -12,14 +12,22 @@ export default function Home() {
         <span>플랜닥스에 어서오세요!</span>
       </div>
       <div className="mb-9">
-        <Button variant="outline" size="sm">
-          <Link href="/create-account" className="flex h-64 items-center gap-2">
+        <Button variant="outline" size="sm" className="w-full">
+          <Link
+            href="/create-account"
+            className="flex items-center justify-center gap-2"
+          >
             <IconLogin className="" /> 시작하기{' '}
           </Link>
         </Button>
-        <div>
-          <span className="m-1">이미 계정이 있나요?</span>
-          <Link href="/login"> 로그인 </Link>
+        <div className="mt-2 text-center">
+          <span className="mr-1">이미 계정이 있나요?</span>
+          <Link
+            href="/login"
+            className="text-purple-800 underline underline-offset-2"
+          >
+            로그인{' '}
+          </Link>
         </div>
       </div>
     </div>

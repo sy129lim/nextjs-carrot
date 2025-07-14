@@ -43,9 +43,9 @@ export function LoginForm({
               <div className="grid gap-3">
                 <Label htmlFor="memberId">아이디</Label>
                 <Input
-                  id="memberId"
+                  // id="memberId"
                   name="memberId"
-                  type="string"
+                  type="memberId"
                   placeholder="아이디를 입력하세요."
                   required
                 />
@@ -55,7 +55,7 @@ export function LoginForm({
                   <Label htmlFor="password">비밀번호</Label>
                 </div>
                 <Input
-                  id="password"
+                  // id="password"
                   name="password"
                   type="password"
                   placeholder="비밀번호를 입력하세요."
