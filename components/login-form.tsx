@@ -22,7 +22,7 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<'div'>) {
-  const [state, action] = useFormState(submitLogin, { errors: [] });
+  const [state, action] = useFormState(submitLogin, null);
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
@@ -48,6 +48,7 @@ export function LoginForm({
                   type="memberId"
                   placeholder="아이디를 입력하세요."
                   required
+                  error={state?.fieldErrors.memberId}
                 />
               </div>
               <div className="grid gap-3">
@@ -60,6 +61,7 @@ export function LoginForm({
                   type="password"
                   placeholder="비밀번호를 입력하세요."
                   required
+                  error={state?.fieldErrors.password}
                 />
               </div>
               <div className="flex flex-col gap-3">
@@ -72,10 +74,10 @@ export function LoginForm({
           <div className="my-6 flex flex-col items-center gap-6">
             <div className="w-full border-t border-gray-200" />
             <Button type="submit" variant="outline" className="w-full">
-              Continue with GitHub
+              카카오로 시작하기
             </Button>
             <Button type="submit" variant="outline" className="-m-3 w-full">
-              Continue with SNS
+              SMS로 시작하기
             </Button>
           </div>
         </CardContent>

@@ -1,22 +1,30 @@
 'use server';
 
-export async function submitLogin(
-  prevState: { errors: string[] },
-  formData: FormData,
-) {
-  const memberId = formData.get('memberId') as string;
-  const password = formData.get('password') as string;
-  await new Promise((resolve) => setTimeout(resolve, 5000));
+import { z } from 'zod';
 
-  const errors = [];
-  if (password && password.length < 6) {
-    errors.push('password is too short');
-  }
-  if (memberId !== 'admin') {
-    errors.push('wrong memberId');
-  }
+import {
+  PASSWORD_MIN_LENGTH,
+  PASSWORD_REGEX,
+  PASSWORD_REGEX_ERROR,
+} from '@/lib/constants';
 
-  return {
-    errors,
+const formSchema = z.object({
+  memberId: z.string().email().toLowerCase(),
+  password: z
+    .string({ error: '비밀번호를 입력하시오.' })
+    .min(PASSWORD_MIN_LENGTH)
+    .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
+});
+
+export async function submitLogin(prevState: unknown, formData: FormData) {
+  const data = {
+    memberId: formData.get('memberId'),
+    password: formData.get('password'),
   };
+  const result = formSchema.safeParse(data);
+  if (!result.success) {
+    return result.error.flatten();
+  } else {
+    console.log(result.data);
+  }
 }

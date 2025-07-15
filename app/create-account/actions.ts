@@ -2,6 +2,12 @@
 
 import { z } from 'zod';
 
+import {
+  PASSWORD_MIN_LENGTH,
+  PASSWORD_REGEX,
+  PASSWORD_REGEX_ERROR,
+} from '@/lib/constants';
+
 const checkPasswords = ({
   password,
   confirm_password,
@@ -12,9 +18,13 @@ const checkPasswords = ({
 
 const formSchema = z
   .object({
-    username: z.string().min(3).max(10),
-    memberId: z.string().email(),
-    password: z.string().min(10),
+    username: z.string(),
+    // .transform((username) => `mr.${username}`)
+    memberId: z.string().email().trim(),
+    password: z
+      .string()
+      .min(PASSWORD_MIN_LENGTH)
+      .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
     confirm_password: z.string().min(10),
   })
   .refine(checkPasswords, {
@@ -32,5 +42,7 @@ export async function createAccount(prevState: unknown, formData: FormData) {
   const result = formSchema.safeParse(data);
   if (!result.success) {
     return result.error.flatten();
+  } else {
+    console.log(result.data);
   }
 }
