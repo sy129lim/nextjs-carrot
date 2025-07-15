@@ -4,9 +4,10 @@ import { z } from 'zod';
 
 import {
   PASSWORD_MIN_LENGTH,
-  PASSWORD_REGEX,
-  PASSWORD_REGEX_ERROR,
+  // PASSWORD_REGEX,
+  // PASSWORD_REGEX_ERROR,
 } from '@/lib/constants';
+import db from '@/lib/db';
 
 const checkPasswords = ({
   password,
@@ -16,16 +17,43 @@ const checkPasswords = ({
   confirm_password: string;
 }) => password === confirm_password;
 
+const checkUniqueUsername = async (username: string) => {
+  const user = await db.user.findUnique({
+    where: {
+      username,
+    },
+    select: {
+      id: true,
+    },
+  });
+  return !Boolean(user);
+};
+
+const checkUniqueMemberid = async (email: string) => {
+  const user = await db.user.findUnique({
+    where: {
+      email,
+    },
+    select: {
+      id: true,
+    },
+  });
+  return !Boolean(user);
+};
+
 const formSchema = z
   .object({
-    username: z.string(),
-    // .transform((username) => `mr.${username}`)
-    memberId: z.string().email().trim(),
-    password: z
+    username: z
       .string()
-      .min(PASSWORD_MIN_LENGTH)
-      .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
-    confirm_password: z.string().min(10),
+      .refine(checkUniqueUsername, '이미 사용중인 이름입니다.'),
+    memberId: z
+      .string()
+      .email()
+      .trim()
+      .refine(checkUniqueMemberid, '이미 등록된 이메일 입니다.'),
+    password: z.string().min(PASSWORD_MIN_LENGTH),
+    // .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
+    confirm_password: z.string().min(PASSWORD_MIN_LENGTH),
   })
   .refine(checkPasswords, {
     message: '비밀번호가 틀립니다.',
@@ -39,10 +67,12 @@ export async function createAccount(prevState: unknown, formData: FormData) {
     password: formData.get('password'),
     confirm_password: formData.get('confirm_password'),
   };
-  const result = formSchema.safeParse(data);
+  const result = await formSchema.safeParseAsync(data);
   if (!result.success) {
     return result.error.flatten();
   } else {
-    console.log(result.data);
+    // 비밀번호 해싱
+    // db에 저장
+    // 로그인 후 /home에 redirect
   }
 }
