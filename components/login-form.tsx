@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 import { useFormState } from 'react-dom';
 
 import { cn } from '@/lib/utils';
@@ -76,8 +78,8 @@ export function LoginForm({
             <Button type="submit" variant="outline" className="w-full">
               카카오로 시작하기
             </Button>
-            <Button type="submit" variant="outline" className="-m-3 w-full">
-              SMS로 시작하기
+            <Button variant="outline" className="-m-3 w-full">
+              <Link href="/sms">SMS로 시작하기</Link>
             </Button>
           </div>
         </CardContent>
