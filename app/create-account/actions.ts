@@ -1,6 +1,10 @@
 'use server';
 
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+
 import bcrypt from 'bcrypt';
+import { getIronSession } from 'iron-session';
 import { z } from 'zod';
 
 import {
@@ -73,7 +77,6 @@ export async function createAccount(prevState: unknown, formData: FormData) {
     return result.error.flatten();
   } else {
     const hashedPassword = await bcrypt.hash(result.data.password, 12);
-    // db에 저장
     const user = await db.user.create({
       data: {
         username: result.data.username,
@@ -84,6 +87,13 @@ export async function createAccount(prevState: unknown, formData: FormData) {
         id: true,
       },
     });
-    // 로그인 후 /home에 redirect
+
+    const cookie = await getIronSession(await cookies(), {
+      cookieName: 'plandocs',
+      password: process.env.COOKIE_PASSWORD!,
+    });
+    cookie.id = user.id;
+    await cookie.save();
+    redirect('/product');
   }
 }
