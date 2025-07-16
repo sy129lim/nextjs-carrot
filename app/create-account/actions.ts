@@ -1,10 +1,8 @@
 'use server';
 
-import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 
 import bcrypt from 'bcrypt';
-import { getIronSession } from 'iron-session';
 import { z } from 'zod';
 
 import {
@@ -13,6 +11,7 @@ import {
   // PASSWORD_REGEX_ERROR,
 } from '@/lib/constants';
 import db from '@/lib/db';
+import getSession from '@/lib/session';
 
 const checkPasswords = ({
   password,
@@ -88,12 +87,9 @@ export async function createAccount(prevState: unknown, formData: FormData) {
       },
     });
 
-    const cookie = await getIronSession(await cookies(), {
-      cookieName: 'plandocs',
-      password: process.env.COOKIE_PASSWORD!,
-    });
-    cookie.id = user.id;
-    await cookie.save();
+    const session = await getSession();
+    session.id = user.id;
+    await session.save();
     redirect('/product');
   }
 }
