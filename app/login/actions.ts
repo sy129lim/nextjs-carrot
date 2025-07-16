@@ -63,7 +63,8 @@ export async function submitLogin(prevState: unknown, formData: FormData) {
     if (ok) {
       const session = await getSession();
       session.id = user!.id;
-      redirect('/product');
+      await session.save();
+      redirect('/profile');
     } else {
       return {
         fieldErrors: {
