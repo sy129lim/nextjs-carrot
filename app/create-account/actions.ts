@@ -21,43 +21,50 @@ const checkPasswords = ({
   confirm_password: string;
 }) => password === confirm_password;
 
-const checkUniqueUsername = async (username: string) => {
-  const user = await db.user.findUnique({
-    where: {
-      username,
-    },
-    select: {
-      id: true,
-    },
-  });
-  return !Boolean(user);
-};
-
-const checkUniqueMemberid = async (memberId: string) => {
-  const user = await db.user.findUnique({
-    where: {
-      memberId,
-    },
-    select: {
-      id: true,
-    },
-  });
-  return !Boolean(user);
-};
-
 const formSchema = z
   .object({
-    username: z
-      .string()
-      .refine(checkUniqueUsername, '이미 사용중인 이름입니다.'),
-    memberId: z
-      .string()
-      .email()
-      .trim()
-      .refine(checkUniqueMemberid, '이미 등록된 이메일 입니다.'),
+    username: z.string(),
+    memberId: z.string().email().trim(),
     password: z.string().min(PASSWORD_MIN_LENGTH),
     // .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
     confirm_password: z.string().min(PASSWORD_MIN_LENGTH),
+  })
+  .superRefine(async ({ username }, ctx) => {
+    const user = await db.user.findUnique({
+      where: {
+        username,
+      },
+      select: {
+        id: true,
+      },
+    });
+    if (user) {
+      ctx.addIssue({
+        code: 'custom',
+        message: '이미 사용중인 이름입니다.',
+        path: ['username'],
+        fatal: true,
+      });
+      return z.NEVER;
+    }
+  })
+  .superRefine(async ({ memberId }, ctx) => {
+    const user = await db.user.findUnique({
+      where: {
+        memberId,
+      },
+      select: {
+        id: true,
+      },
+    });
+    if (user) {
+      ctx.addIssue({
+        code: 'custom',
+        message: '이미 사용중인 아이디입니다.',
+        path: ['memberId'],
+        fatal: true,
+      });
+    }
   })
   .refine(checkPasswords, {
     message: '비밀번호가 틀립니다.',
