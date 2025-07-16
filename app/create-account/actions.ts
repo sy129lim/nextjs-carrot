@@ -1,5 +1,6 @@
 'use server';
 
+import bcrypt from 'bcrypt';
 import { z } from 'zod';
 
 import {
@@ -29,10 +30,10 @@ const checkUniqueUsername = async (username: string) => {
   return !Boolean(user);
 };
 
-const checkUniqueMemberid = async (email: string) => {
+const checkUniqueMemberid = async (memberId: string) => {
   const user = await db.user.findUnique({
     where: {
-      email,
+      memberId,
     },
     select: {
       id: true,
@@ -71,8 +72,18 @@ export async function createAccount(prevState: unknown, formData: FormData) {
   if (!result.success) {
     return result.error.flatten();
   } else {
-    // 비밀번호 해싱
+    const hashedPassword = await bcrypt.hash(result.data.password, 12);
     // db에 저장
+    const user = await db.user.create({
+      data: {
+        username: result.data.username,
+        memberId: result.data.memberId,
+        password: hashedPassword,
+      },
+      select: {
+        id: true,
+      },
+    });
     // 로그인 후 /home에 redirect
   }
 }
